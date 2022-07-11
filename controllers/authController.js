@@ -61,6 +61,7 @@ const authController = {
           sameSite:'strict',
           secure:false
         })
+
         const { password, ...others } = user._doc;
        return res.status(200).json({
           message: "login success!",
@@ -88,19 +89,20 @@ const authController = {
     jwt.verify(refresh_token,process.env.REFRESH_KEY,(err,user) => {
       
       if (err) {
-        res.status(401).json('You are not authenticated')
+       return res.status(401).json('You are not authenticated')
       }
       refreshTokens = refreshTokens.filter((token) => token !== refresh_token)
       const new_access_token = authController.generateAccessToken(user)
       const new_refresh_token = authController.generateRefreshToken(user)
       refreshTokens.push(new_refresh_token)
+      console.log('new_refresh_token',new_refresh_token);
       res.cookie('refresh_token',new_refresh_token, {
         httpOnly:true,
         path:'/',
         sameSite:'strict',
         secure:false
       });
-      res.status(200).json({access_token:new_access_token})
+    return  res.status(200).json({access_token:new_access_token})
     })
   },
   logout: async (req,res) => {

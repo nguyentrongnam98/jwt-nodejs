@@ -13,10 +13,10 @@ const userController = {
     try {
       const findUser = await User.findById(req.params.id);
       if (findUser) {
-        res.status(200).json("Delete user success !");
+       return res.status(200).json("Delete user success !");
       }
     } catch (error) {
-      res.status(500).json(error);
+     return res.status(500).json(error);
     }
   },
 };
